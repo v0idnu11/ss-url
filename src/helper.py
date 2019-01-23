@@ -95,7 +95,7 @@ def ss_gen(ss_obj):
     """
     ss://base64(method:password)@domain:port/?#remarks
 
-    :param url:
+    :param ss_obj:
     :return:
     """
     part1 = base64.urlsafe_b64encode((ss_obj['method'] + ':' + ss_obj['password']).encode()).decode()
@@ -103,17 +103,32 @@ def ss_gen(ss_obj):
     return 'ss://%s@%s:%s/?#%s' % (part1, ss_obj['server'], str(ss_obj['server_port']), remarks)
 
 
-def ssr_to_ss(ssr_obj):
+def ssr_to_ss(ssr_obj, rewrite=None):
     """
     Convert ssr dict to ss dict
 
-    :param data:
+    :param ssr_obj:
+    :param rewrite:
     :return:
     """
-    return {
+
+    #     for key, val in rewrite.items():
+    #         rewrite_obj[key] = val
+
+    ss = {
         'server': ssr_obj['server'],
         'server_port': ssr_obj['server_port'],
         'method': ssr_obj['method'],
         'password': ssr_obj['password'],
         'remarks': ssr_obj['remarks']
     }
+
+    if rewrite:
+        rewrite_obj = {}
+        available_keys = ['server', 'server_port', 'method', 'password']
+        for key, val in rewrite.items():
+            if key in available_keys:
+                rewrite_obj[key] = val
+        ss.update(rewrite_obj)
+
+    return ss

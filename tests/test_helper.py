@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-"""
+'''
     test_helper
-"""
+'''
 
 import unittest
-from src.helper import ssr_parse, ss_gen
+from src.helper import ssr_parse, ss_gen, ssr_to_ss
 
 
 class TestHelper(unittest.TestCase):
@@ -12,22 +12,50 @@ class TestHelper(unittest.TestCase):
         # us-7.mitsuha-node.com:443:auth_aes128_md5:aes-256-ctr:tls1.2_ticket_auth:dGVzdA/?obfsparam=dGVzdA&protoparam=dGVzdA&remarks=cml4Q2xvdWRfVVNfZm9yX01QUyAtIDQ0MyDnq6_lj6M&group=5Za15biV5pav572R57uc5Yqg6YCfLeWNleerr-WPo-WkmueUqOaItw
         url = 'ssr://dXMtNy5taXRzdWhhLW5vZGUuY29tOjQ0MzphdXRoX2FlczEyOF9tZDU6YWVzLTI1Ni1jdHI6dGxzMS4yX3RpY2tldF9hdXRoOmRHVnpkQS8/b2Jmc3BhcmFtPWRHVnpkQSZwcm90b3BhcmFtPWRHVnpkQSZyZW1hcmtzPWNtbDRRMnh2ZFdSZlZWTmZabTl5WDAxUVV5QXRJRFEwTXlEbnE2X2xqNk0mZ3JvdXA9NVphMTViaVY1cGF2NTcyUjU3dWM1WXFnNllDZkxlV05sZWVyci1XUG8tV2ttdWVVcU9hSXR3'
         target = {
-                     "server": "us-7.mitsuha-node.com",
-                     "server_port": 443,
-                     "method": "aes-256-ctr",
-                     "password": "test",
-                     "protocol": "auth_aes128_md5",
-                     "protocolparam": "test",
-                     "obfs": "tls1.2_ticket_auth",
-                     "obfsparam": "test",
-                     "group": "喵帕斯网络加速-单端口多用户",
-                     "remarks": "rixCloud_US_for_MPS - 443 端口",
-                     "remarks_base64": "cml4Q2xvdWRfVVNfZm9yX01QUyAtIDQ0MyDnq6\/lj6M=",
-                 }
+            'server': 'us-7.mitsuha-node.com',
+            'server_port': 443,
+            'method': 'aes-256-ctr',
+            'password': 'test',
+            'protocol': 'auth_aes128_md5',
+            'protocolparam': 'test',
+            'obfs': 'tls1.2_ticket_auth',
+            'obfsparam': 'test',
+            'group': '喵帕斯网络加速-单端口多用户',
+            'remarks': 'rixCloud_US_for_MPS - 443 端口',
+            'remarks_base64': 'cml4Q2xvdWRfVVNfZm9yX01QUyAtIDQ0MyDnq6\/lj6M=',
+         }
 
         ret = ssr_parse(url)
 
         self.assertDictEqual(ret, target)
+
+    def test_ssr_to_ss(self):
+        ssr = {
+            'server': 'us-7.mitsuha-node.com',
+            'server_port': 443,
+            'method': 'aes-256-ctr',
+            'password': 'test',
+            'protocol': 'auth_aes128_md5',
+            'protocolparam': 'test',
+            'obfs': 'tls1.2_ticket_auth',
+            'obfsparam': 'test',
+            'group': '喵帕斯网络加速-单端口多用户',
+            'remarks': 'rixCloud_US_for_MPS - 443 端口',
+            'remarks_base64': 'cml4Q2xvdWRfVVNfZm9yX01QUyAtIDQ0MyDnq6\/lj6M=',
+        }
+        target = {
+            'server': 'us-7.mitsuha-node.com', 
+            'server_port': 12345, 
+            'method': 'aes-256-ctr', 
+            'password': 'test',
+            'remarks': 'rixCloud_US_for_MPS - 443 端口'
+        }
+
+        ss = ssr_to_ss(ssr, {
+            'server_port': 12345
+        })
+
+        self.assertDictEqual(ss, target)
 
     def test_ss_gen(self):
         obj = {

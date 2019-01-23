@@ -7,11 +7,12 @@
 from .helper import base64_decode, ssr_parse, ss_gen, ssr_to_ss
 
 
-def convert(data, debug=False):
+def convert(data, rewrite=None, debug=False):
     """
     Convert subscribe feed to ss urls.
 
     :param data:
+    :param rewrite:
     :param debug:
     :return:
     """
@@ -23,7 +24,7 @@ def convert(data, debug=False):
         if ssr_url:
             try:
                 ssr_obj = ssr_parse(ssr_url)
-                ss_obj = ssr_to_ss(ssr_obj)
+                ss_obj = ssr_to_ss(ssr_obj, rewrite)
                 ss_url = ss_gen(ss_obj)
                 ss_urls.append(ss_url)
 
